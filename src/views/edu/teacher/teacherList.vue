@@ -40,7 +40,6 @@
                     {{ scope.row.level===1 ? "高级讲师" : "首席讲师" }}
                 </template>
             </el-table-column>
-            <el-table-column prop="avatar" label="头像" width="100"> </el-table-column>
             <el-table-column prop="intro" label="简介" width="180"> </el-table-column>
             <el-table-column prop="gmtCreate" label="创建时间" width="180"> </el-table-column>
             <el-table-column prop="sort" label="排序" width="50"> </el-table-column>

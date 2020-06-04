@@ -1,14 +1,28 @@
 <template>
     <div>
         <el-form :model="teacherForm" label-width="80px" style="width: 90%">
+            <el-form-item label="头像">
+                <!--头像缩略图-->
+                <pan-thumb :image="teacherForm.avatar"/>
+                <el-button type="primary" icon="el-icon-upload" @click="imageUploadShow=true">更换头像
+                </el-button>
+
+                <image-cropper
+                    v-show="imageUploadShow"
+                    :width="300"
+                    :height="300"
+                    :key="imageKey"
+                    :url="BASE_API + '/oss/fileupload/avatar'"
+                    field="file"
+                    @close="close"
+                    @crop-upload-success="cropSuccess"
+                />
+            </el-form-item>
             <el-form-item label="姓名">
                 <el-input v-model="teacherForm.name"></el-input>
             </el-form-item>
             <el-form-item label="职位">
                 <el-input v-model="teacherForm.career"></el-input>
-            </el-form-item>
-            <el-form-item label="头像">
-                <el-input v-model="teacherForm.avatar"></el-input>
             </el-form-item>
             <el-form-item label="排序">
                 <el-input v-model="teacherForm.sort"></el-input>
@@ -33,11 +47,17 @@
 
 <script>
 import { addTeacher, getTeacherInfo, editTeacher } from '@/api/edu/teacher/teacher.js'
+import ImageCropper from '@/components/ImageCropper'
+import PanThumb from '@/components/PanThumb'
 
 export default {
+    components: {ImageCropper, PanThumb},
     data() {
         return {
-            teacherForm: {}
+            teacherForm: {},
+            imageUploadShow: false,
+            BASE_API: process.env.BASE_API,
+            imageKey: 0,
         }
     },
 
@@ -93,6 +113,15 @@ export default {
                 });
                 this.$router.push({path: "/teacher/table"})
             })
+        },
+        close() {
+            this.imageUploadShow = false
+            this.imageKey = this.imageKey + 1
+        },
+        cropSuccess(data) {
+            this.imageUploadShow = false
+            this.teacherForm.avatar = data.url
+            this.imageKey = this.imageKey + 1
         }
     }
 }
